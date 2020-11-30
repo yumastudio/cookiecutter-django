@@ -1,8 +1,8 @@
 CONTAINER_PREFIX={{ cookiecutter.project_slug }}
-POSTGRES_HOST={{ cookiecutter.postgres_host }}
-POSTGRES_USER={{ cookiecutter.postgres_user }}
-POSTGRES_PASSWORD={{ cookiecutter.postgres_password }}
-POSTGRES_DB={{ cookiecutter.postgres_db }}
+POSTGRES_HOST=postgres.{{ cookiecutter.domain_name }}
+POSTGRES_USER=!!!SET POSTGRES_USER!!!
+POSTGRES_PASSWORD=!!!SET POSTGRES_PASSWORD!!!
+POSTGRES_DB={{ cookiecutter.project_slug }}
 
 AWS_PROFILE={{ cookiecutter.project_slug }}
 AWS_CLUSTER={{ cookiecutter.project_slug }}

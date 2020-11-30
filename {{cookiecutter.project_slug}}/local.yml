@@ -17,7 +17,8 @@ services:
       - ./django:/app:z
     env_file:
       - ./.envs/.local/.django
-      - ./.envs/.local/.postgres
+      - ./.envs/.production/.postgres
+      - ./.envs/.production/.anymail
     ports:
       - "8000:8000"
     command: /start
@@ -25,14 +26,14 @@ services:
   postgres:
     build:
       context: .
-      dockerfile: ./compose/local/postgres/Dockerfile
-    image: {{ cookiecutter.project_slug }}_local_postgres
+      dockerfile: ./compose/production/postgres/Dockerfile
+    image: {{ cookiecutter.project_slug }}_production_postgres
     container_name: postgres
     volumes:
       - local_postgres_data:/var/lib/postgresql/data:Z
       - local_postgres_data_backups:/backups:z
     env_file:
-      - ./.envs/.local/.postgres
+      - ./.envs/.production/.postgres
 
   redis:
     image: redis:5.0

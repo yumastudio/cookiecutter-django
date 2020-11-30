@@ -17,6 +17,7 @@ services:
     env_file:
       - ./.envs/.production/.django
       - ./.envs/.production/.postgres
+      - ./.envs/.production/.anymail
     command: /start
 
   traefik:
@@ -50,3 +51,12 @@ services:
     <<: *django
     image: {{ cookiecutter.project_slug }}_production_flower
     command: /start-flower
+
+  awscli:
+    build:
+      context: .
+      dockerfile: ./compose/production/aws/Dockerfile
+    env_file:
+      - ./.envs/.production/.django
+    volumes:
+      - production_postgres_data_backups:/backups:z
