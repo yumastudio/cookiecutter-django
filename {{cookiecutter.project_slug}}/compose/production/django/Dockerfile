@@ -1,14 +1,13 @@
-{% if cookiecutter.js_task_runner == 'Gulp' -%}
 FROM node:10-stretch-slim as client-builder
 
 WORKDIR /app
-COPY ./package.json /app
+COPY ./django/package.json /app
 RUN npm install && npm cache clean --force
-COPY . /app
+COPY ./django /app
 RUN npm run build
+RUN rm -rf node_modules
 
 # Python build stage
-{%- endif %}
 FROM python:3.8-slim-buster
 
 ENV PYTHONUNBUFFERED 1
@@ -28,7 +27,7 @@ RUN addgroup --system django \
     && adduser --system --ingroup django django
 
 # Requirements are installed here to ensure they will be cached.
-COPY ./requirements /requirements
+COPY ./django/requirements /requirements
 RUN pip install --no-cache-dir -r /requirements/production.txt \
     && rm -rf /requirements
 
@@ -42,7 +41,6 @@ RUN sed -i 's/\r$//g' /start
 RUN chmod +x /start
 
 
-{%- if cookiecutter.use_celery == "y" %}
 COPY --chown=django:django ./compose/production/django/celery/worker/start /start-celeryworker
 RUN sed -i 's/\r$//g' /start-celeryworker
 RUN chmod +x /start-celeryworker
@@ -56,13 +54,9 @@ RUN chmod +x /start-celerybeat
 COPY ./compose/production/django/celery/flower/start /start-flower
 RUN sed -i 's/\r$//g' /start-flower
 RUN chmod +x /start-flower
-{%- endif %}
 
-{%- if cookiecutter.js_task_runner == 'Gulp' %}
+
 COPY --from=client-builder --chown=django:django /app /app
-{% else %}
-COPY --chown=django:django . /app
-{%- endif %}
 
 USER django
 

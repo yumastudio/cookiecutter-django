@@ -1,0 +1,2 @@
+class GraphQLError:
+    ERROR = "ERROR"
