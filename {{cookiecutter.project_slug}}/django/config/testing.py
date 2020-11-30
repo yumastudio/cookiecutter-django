@@ -6,7 +6,8 @@ from .schema import schema
 from {{cookiecutter.project_slug}}.users.tests.factories import (
     UserFactory
 )
-from django.conf import settings
+from datetime import timedelta
+
 
 class GraphQLTestCase(GQLTestCase):
     GRAPHQL_SCHEMA = schema
@@ -32,7 +33,14 @@ class GraphQLTestCase(GQLTestCase):
             'Authorization': 'Bearer ' + token
         } if token else {}
 
-    @override_settings(DEBUG=True)
+    @override_settings(DEBUG=True, GRAPHQL_JWT={
+        'JWT_SECRET_KEY': 'KEY',
+        'JWT_VERIFY_EXPIRATION': True,
+        'JWT_AUTH_HEADER_NAME': 'Authorization',
+        'JWT_AUTH_HEADER_PREFIX': 'Bearer',
+        'JWT_EXPIRATION_DELTA': timedelta(days=30),
+        'JWT_REFRESH_EXPIRATION_DELTA': timedelta(days=365),
+    })
     def _execute_query(self, query, op_name, variables={}, should_fail=False):
         logging.disable(logging.CRITICAL)
         response = self.query(

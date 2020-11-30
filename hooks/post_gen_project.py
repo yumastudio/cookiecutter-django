@@ -121,6 +121,13 @@ def set_postgres_password(file_path, value=None):
     return postgres_password
 
 
+def set_celery_flower_user(file_path, value):
+    celery_flower_user = set_flag(
+        file_path, "!!!SET CELERY_FLOWER_USER!!!", value=value
+    )
+    return celery_flower_user
+
+
 def set_celery_flower_password(file_path, value=None):
     celery_flower_password = set_flag(
         file_path,
@@ -139,12 +146,6 @@ def set_flags_in_envs(postgres_user, celery_flower_user, debug=False):
     production_postgres_envs_path = os.path.join(".envs", ".production", ".postgres")
 
     set_django_secret_key(production_django_envs_path)
-    set_celery_flower_password(
-        local_django_envs_path, value=DEBUG_VALUE if debug else None
-    )
-    set_celery_flower_password(
-        production_django_envs_path, value=DEBUG_VALUE if debug else None
-    )
 
     set_postgres_user(production_postgres_envs_path, value=postgres_user)
     set_postgres_password(
@@ -156,11 +157,22 @@ def set_flags_in_envs(postgres_user, celery_flower_user, debug=False):
         os.path.join("Makefile"), value=DEBUG_VALUE if debug else None
     )
 
+    set_celery_flower_user(local_django_envs_path, value=celery_flower_user)
+    set_celery_flower_password(
+        local_django_envs_path, value=DEBUG_VALUE if debug else None
+    )
+    set_celery_flower_user(production_django_envs_path, value=celery_flower_user)
+    set_celery_flower_password(
+        production_django_envs_path, value=DEBUG_VALUE if debug else None
+    )
+
 
 def set_flags_in_settings_files():
-    set_django_secret_key(os.path.join("django", "config", "settings", "local.py"))
-    set_django_secret_key(os.path.join("django", "config", "settings", "test.py"))
-    set_graphql_jwt_secret_key(os.path.join("django", "config", "settings", "local"))
+    local_django_settings_path = os.path.join("django", "config", "settings", "local.py")
+    test_django_settings_path = os.path.join("django", "config", "settings", "test.py")
+    set_django_secret_key(local_django_settings_path)
+    set_django_secret_key(test_django_settings_path)
+    set_graphql_jwt_secret_key(local_django_settings_path)
 
 
 def main():
