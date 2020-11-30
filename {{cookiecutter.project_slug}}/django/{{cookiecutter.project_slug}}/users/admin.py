@@ -12,11 +12,9 @@ class UserAdmin(auth_admin.UserAdmin):
 
     form = UserChangeForm
     add_form = UserCreationForm
-    fieldsets = (("User", {"fields": ("name",)}),) + tuple(
-        auth_admin.UserAdmin.fieldsets
-    )
-    list_display = ["username", "name", "is_superuser", "avatar_preview"]
-    search_fields = ["name"]
+    fieldsets = auth_admin.UserAdmin.fieldsets
+    list_display = ["email", "is_superuser", "avatar_preview"]
+    search_fields = ["email"]
 
     def avatar_preview(self, obj):
         return get_photo_preview(
