@@ -24,6 +24,11 @@ CACHES = {
     }
 }
 
+# MEDIA
+# ------------------------------------------------------------------------------
+# https://docs.djangoproject.com/en/dev/ref/settings/#media-url
+MEDIA_URL = "http://api.{{cookiecutter.project_slug.split('.')[0]}}.local" + MEDIA_PATH
+
 # Anymail
 # ------------------------------------------------------------------------------
 # https://anymail.readthedocs.io/en/stable/installation/#installing-anymail

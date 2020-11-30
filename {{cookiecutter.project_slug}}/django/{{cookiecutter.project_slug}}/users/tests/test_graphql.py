@@ -32,7 +32,7 @@ class UserTestCase(GraphQLTestCase):
             **kwargs
         )
 
-    def get_user_profile(self, **kwargs):
+    def user_profile(self, **kwargs):
         query = '''
             query userProfile {
                 userProfile{

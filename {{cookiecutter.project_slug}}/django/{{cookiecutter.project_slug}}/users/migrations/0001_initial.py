@@ -2,6 +2,8 @@ import django.contrib.auth.models
 import django.contrib.auth.validators
 from django.db import migrations, models
 import django.utils.timezone
+import dynamic_filenames
+import easy_thumbnails.fields
 
 
 class Migration(migrations.Migration):
@@ -94,9 +96,9 @@ class Migration(migrations.Migration):
                     ),
                 ),
                 (
-                    "name",
-                    models.CharField(
-                        blank=True, max_length=255, verbose_name="Name of User"
+                    "avatar",
+                    easy_thumbnails.fields.ThumbnailerImageField(
+                        blank=True, upload_to=dynamic_filenames.FilePattern(filename_pattern='{app_label}/{model_name}/{instance.id}{ext}')
                     ),
                 ),
                 (
