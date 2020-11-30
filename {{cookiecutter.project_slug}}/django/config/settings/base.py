@@ -2,6 +2,7 @@
 Base settings to build other settings files upon.
 """
 from pathlib import Path
+from datetime import timedelta
 
 import environ
 
@@ -70,6 +71,7 @@ THIRD_PARTY_APPS = [
     "allauth.socialaccount",
     "django_celery_beat",
     "graphene_django",
+    "social_django",
     "corsheaders",
     "ckeditor",
     "ckeditor_uploader",
@@ -96,6 +98,8 @@ AUTHENTICATION_BACKENDS = [
     "graphql_jwt.backends.JSONWebTokenBackend",
     "django.contrib.auth.backends.ModelBackend",
     "allauth.account.auth_backends.AuthenticationBackend",
+    'social_core.backends.facebook.FacebookOAuth2',
+    'social_core.backends.google.GoogleOAuth2',
 ]
 # https://docs.djangoproject.com/en/dev/ref/settings/#auth-user-model
 AUTH_USER_MODEL = "users.User"
@@ -296,6 +300,12 @@ ACCOUNT_ADAPTER = "{{cookiecutter.project_slug}}.users.adapters.AccountAdapter"
 # https://django-allauth.readthedocs.io/en/latest/configuration.html
 SOCIALACCOUNT_ADAPTER = "{{cookiecutter.project_slug}}.users.adapters.SocialAccountAdapter"
 
+# django-compressor
+# ------------------------------------------------------------------------------
+# https://django-compressor.readthedocs.io/en/latest/quickstart/#installation
+INSTALLED_APPS += ["compressor"]
+STATICFILES_FINDERS += ["compressor.finders.CompressorFinder"]
+
 # EASY THUMBNAILS
 # ------------------------------------------------------------------------------
 # https://easy-thumbnails.readthedocs.io/en/latest/install/
@@ -338,6 +348,44 @@ CORS_ALLOW_METHODS = (
     'POST',
 )
 CORS_ORIGIN_ALLOW_ALL = True
+
+# GraphQL JWT
+# ------------------------------------------------------------------------------
+GRAPHQL_JWT = {
+    'JWT_SECRET_KEY': '!!!SET GRAPHQL_JWT_SECRET_KEY!!!',
+    'JWT_VERIFY_EXPIRATION': True,
+    # 'JWT_AUTH_HEADER_NAME': 'Authorization',
+    'JWT_AUTH_HEADER_PREFIX': 'Bearer',
+    'JWT_EXPIRATION_DELTA': timedelta(days=30),
+    'JWT_REFRESH_EXPIRATION_DELTA': timedelta(days=365),
+}
+
+# SOCIAL AUTH GRAPHENE
+# ------------------------------------------------------------------------------
+SOCIAL_AUTH_FACEBOOK_KEY = env.str('FACEBOOK_KEY')
+SOCIAL_AUTH_FACEBOOK_SECRET = env.str('FACEBOOK_SECRET')
+
+SOCIAL_AUTH_FACEBOOK_SCOPE = ['email']
+SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {
+    'fields': 'id, name, email, age_range',
+}
+
+USERNAME_IS_FULL_EMAIL = True
+SOCIAL_AUTH_CLEAN_USERNAMES = True
+
+SOCIAL_AUTH_PIPELINE = [
+    'social_core.pipeline.social_auth.social_details',
+    'social_core.pipeline.social_auth.social_uid',
+    'social_core.pipeline.social_auth.auth_allowed',
+    'social_core.pipeline.social_auth.social_user',
+    'social_core.pipeline.user.get_username',
+    'social_core.pipeline.social_auth.associate_by_email',
+    'social_core.pipeline.user.create_user',
+    'social_core.pipeline.social_auth.associate_user',
+    'social_core.pipeline.social_auth.load_extra_data',
+    'social_core.pipeline.user.user_details',
+    'config.pipelines.save_avatar',
+]
 
 # CKEDITOR
 # ------------------------------------------------------------------------------

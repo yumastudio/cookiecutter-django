@@ -89,6 +89,17 @@ def set_django_secret_key(file_path):
     return django_secret_key
 
 
+def set_graphql_jwt_secret_key(file_path):
+    django_secret_key = set_flag(
+        file_path,
+        "!!!SET GRAPHQL_JWT_SECRET_KEY!!!",
+        length=64,
+        using_digits=True,
+        using_ascii_letters=True,
+    )
+    return django_secret_key
+
+
 def generate_random_user():
     return generate_random_string(length=32, using_ascii_letters=True)
 
@@ -100,18 +111,6 @@ def generate_postgres_user(debug=False):
 def set_postgres_user(file_path, value):
     postgres_user = set_flag(file_path, "!!!SET POSTGRES_USER!!!", value=value)
     return postgres_user
-
-
-def set_postgres_password(file_path, value=None):
-    postgres_password = set_flag(
-        file_path,
-        "!!!SET POSTGRES_PASSWORD!!!",
-        value=value,
-        length=64,
-        using_digits=True,
-        using_ascii_letters=True,
-    )
-    return postgres_password
 
 
 def set_celery_flower_password(file_path, value=None):
@@ -129,20 +128,8 @@ def set_celery_flower_password(file_path, value=None):
 def set_flags_in_envs(postgres_user, celery_flower_user, debug=False):
     local_django_envs_path = os.path.join(".envs", ".local", ".django")
     production_django_envs_path = os.path.join(".envs", ".production", ".django")
-    local_postgres_envs_path = os.path.join(".envs", ".local", ".postgres")
-    production_postgres_envs_path = os.path.join(".envs", ".production", ".postgres")
 
     set_django_secret_key(production_django_envs_path)
-
-    set_postgres_user(local_postgres_envs_path, value=postgres_user)
-    set_postgres_password(
-        local_postgres_envs_path, value=DEBUG_VALUE if debug else None
-    )
-    set_postgres_user(production_postgres_envs_path, value=postgres_user)
-    set_postgres_password(
-        production_postgres_envs_path, value=DEBUG_VALUE if debug else None
-    )
-
     set_celery_flower_password(
         local_django_envs_path, value=DEBUG_VALUE if debug else None
     )
@@ -154,6 +141,7 @@ def set_flags_in_envs(postgres_user, celery_flower_user, debug=False):
 def set_flags_in_settings_files():
     set_django_secret_key(os.path.join("django", "config", "settings", "local.py"))
     set_django_secret_key(os.path.join("django", "config", "settings", "test.py"))
+    set_graphql_jwt_secret_key(os.path.join("django", "config", "settings", "local"))
 
 
 def main():

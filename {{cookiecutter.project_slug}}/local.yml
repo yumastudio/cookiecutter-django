@@ -25,8 +25,8 @@ services:
   postgres:
     build:
       context: .
-      dockerfile: ./compose/production/postgres/Dockerfile
-    image: {{ cookiecutter.project_slug }}_production_postgres
+      dockerfile: ./compose/local/postgres/Dockerfile
+    image: {{ cookiecutter.project_slug }}_local_postgres
     container_name: postgres
     volumes:
       - local_postgres_data:/var/lib/postgresql/data:Z

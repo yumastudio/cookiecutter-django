@@ -11,18 +11,11 @@ DJANGO_ALLOWED_HOSTS=.{{ cookiecutter.domain_name }}
 # TIP: better off using DNS, however, redirect is OK too
 DJANGO_SECURE_SSL_REDIRECT=False
 
-# Email
-# ------------------------------------------------------------------------------
-DJANGO_SERVER_EMAIL=
-SENDGRID_API_KEY=
-SENDGRID_GENERATE_MESSAGE_ID=True
-SENDGRID_MERGE_FIELD_FORMAT=None
-
 # AWS
 # ------------------------------------------------------------------------------
-DJANGO_AWS_ACCESS_KEY_ID=
-DJANGO_AWS_SECRET_ACCESS_KEY=
-DJANGO_AWS_STORAGE_BUCKET_NAME=
+DJANGO_AWS_ACCESS_KEY_ID={{ cookiecutter.aws_access_key_id }}
+DJANGO_AWS_SECRET_ACCESS_KEY={{ cookiecutter.aws_secret_access_key }}
+DJANGO_AWS_STORAGE_BUCKET_NAME={{ cookiecutter.aws_storage_bucket_name }}
 
 # django-allauth
 # ------------------------------------------------------------------------------
@@ -34,7 +27,7 @@ WEB_CONCURRENCY=2
 
 # Sentry
 # ------------------------------------------------------------------------------
-SENTRY_DSN=
+SENTRY_DSN={{ cookiecutter.sentry_dsn }}
 
 # Redis
 # ------------------------------------------------------------------------------
