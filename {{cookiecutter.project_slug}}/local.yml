@@ -23,7 +23,7 @@ services:
     environment:
       - VIRTUAL_HOST=api.{{ cookiecutter.domain_name.split(".")[0] }}.local
     networks:
-      - nginxproxy_local_network
+      - nginxproxy_network
       - {{ cookiecutter.project_slug }}_local_network
     expose:
       - "8000"
@@ -43,7 +43,7 @@ services:
     environment:
       - VIRTUAL_HOST=postgres.{{ cookiecutter.domain_name.split(".")[0] }}.local
     networks:
-      - nginxproxy_local_network
+      - nginxproxy_network
       - {{ cookiecutter.project_slug }}_local_network
     expose:
       - "5432"
@@ -92,9 +92,8 @@ services:
       - /app/node_modules
     command: npm run dev
 
-
 networks:
   {{ cookiecutter.project_slug }}_local_network:
     name: {{ cookiecutter.project_slug }}_local_network
-  nginxproxy_local_network:
+  nginxproxy_network:
     external: true

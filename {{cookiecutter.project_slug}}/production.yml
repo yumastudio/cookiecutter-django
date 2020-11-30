@@ -22,7 +22,7 @@ services:
       - VIRTUAL_HOST=api.{{ cookiecutter.domain_name }}
       - LETSENCRYPT_HOST=api.{{ cookiecutter.domain_name }}
     networks:
-      - nginxproxy_production_network
+      - nginxproxy_network
       - {{ cookiecutter.project_slug }}_production_network
     expose:
       - "8000"
@@ -43,7 +43,7 @@ services:
       - VIRTUAL_HOST=postgres.{{ cookiecutter.domain_name }}
       - LETSENCRYPT_HOST=postgres.{{ cookiecutter.domain_name }}
     networks:
-      - nginxproxy_production_network
+      - nginxproxy_network
       - {{ cookiecutter.project_slug }}_production_network
     expose:
       - "5432"
@@ -90,9 +90,8 @@ services:
     volumes:
       - production_postgres_data_backups:/backups:z
 
-
 networks:
   {{ cookiecutter.project_slug }}_production_network:
     name: {{ cookiecutter.project_slug }}_production_network
-  nginxproxy_production_network:
+  nginxproxy_network:
     external: true
