@@ -11,6 +11,7 @@ services:
       context: .
       dockerfile: ./compose/production/django/Dockerfile
     image: {{ cookiecutter.project_slug }}_production_django
+    container_name: {{ cookiecutter.project_slug }}_production_django
     depends_on:
       - postgres
       - redis
@@ -25,6 +26,7 @@ services:
       context: .
       dockerfile: ./compose/production/traefik/Dockerfile
     image: {{ cookiecutter.project_slug }}_production_traefik
+    container_name: {{ cookiecutter.project_slug }}_production_traefik
     depends_on:
       - django
     volumes:
@@ -36,26 +38,32 @@ services:
 
   redis:
     image: redis:5.0
+    container_name: {{ cookiecutter.project_slug }}_production_redis
 
   celeryworker:
     <<: *django
     image: {{ cookiecutter.project_slug }}_production_celeryworker
+    container_name: {{ cookiecutter.project_slug }}_production_celeryworker
     command: /start-celeryworker
 
   celerybeat:
     <<: *django
     image: {{ cookiecutter.project_slug }}_production_celerybeat
+    container_name: {{ cookiecutter.project_slug }}_production_celerybeat
     command: /start-celerybeat
 
   flower:
     <<: *django
     image: {{ cookiecutter.project_slug }}_production_flower
+    container_name: {{ cookiecutter.project_slug }}_production_flower
     command: /start-flower
 
   awscli:
     build:
       context: .
       dockerfile: ./compose/production/aws/Dockerfile
+    image: {{ cookiecutter.project_slug }}_production_awscli
+    container_name: {{ cookiecutter.project_slug }}_production_awscli
     env_file:
       - ./.envs/.production/.django
     volumes:

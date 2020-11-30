@@ -1,28 +1,9 @@
-{{cookiecutter.project_name}}
-{{ '=' * cookiecutter.project_name|length }}
-
+# {{cookiecutter.project_name}}
 {{cookiecutter.description}}
 
-.. image:: https://img.shields.io/badge/built%20with-Cookiecutter%20Django-ff69b4.svg
-     :target: https://github.com/pydanny/cookiecutter-django/
-     :alt: Built with Cookiecutter Django
-.. image:: https://img.shields.io/badge/code%20style-black-000000.svg
-     :target: https://github.com/ambv/black
-     :alt: Black code style
+## Basic Commands
 
-:License: Apache2.0
-
-Settings
---------
-
-Moved to settings_.
-
-.. _settings: http://cookiecutter-django.readthedocs.io/en/latest/settings.html
-
-Basic Commands
---------------
-
-Setting Up Your Users
+### Setting Up Your Users
 ^^^^^^^^^^^^^^^^^^^^^
 
 * To create a **normal user account**, just go to Sign Up and fill out the form. Once you submit it, you'll see a "Verify Your E-mail Address" page. Go to your console to see a simulated email verification message. Copy the link into your browser. Now the user's email should be verified and ready to go.
