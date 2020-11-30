@@ -21,9 +21,10 @@ services:
       - ./.envs/.production/.postgres
       - ./.envs/.django
     environment:
-      - VIRTUAL_HOST=api.{{ cookiecutter.domain_name.split(".")[0] }}.dev
+      - VIRTUAL_HOST=api.{{ cookiecutter.domain_name.split(".")[0] }}.local
     networks:
-      - nginxproxy_local
+      - nginxproxy_local_network
+      - {{ cookiecutter.project_slug }}_local_network
     expose:
       - "8000"
     command: /start
@@ -40,15 +41,18 @@ services:
     env_file:
       - ./.envs/.production/.postgres
     environment:
-      - VIRTUAL_HOST=postgres.{{ cookiecutter.domain_name.split(".")[0] }}.dev
+      - VIRTUAL_HOST=postgres.{{ cookiecutter.domain_name.split(".")[0] }}.local
     networks:
-      - nginxproxy_local
+      - nginxproxy_local_network
+      - {{ cookiecutter.project_slug }}_local_network
     expose:
       - "5432"
 
   redis:
     image: redis:5.0
     container_name: {{ cookiecutter.project_slug }}_local_redis
+    networks:
+      - {{ cookiecutter.project_slug }}_local_network
 
   celeryworker:
     <<: *django
@@ -69,7 +73,7 @@ services:
     image: {{ cookiecutter.project_slug }}_local_flower
     container_name: {{ cookiecutter.project_slug }}_local_flower
     environment:
-      - VIRTUAL_HOST=flower.{{ cookiecutter.domain_name.split(".")[0] }}.dev
+      - VIRTUAL_HOST=flower.{{ cookiecutter.domain_name.split(".")[0] }}.local
     expose:
       - "5555"
     command: /start-flower
@@ -90,5 +94,7 @@ services:
 
 
 networks:
-  nginxproxy_local:
+  {{ cookiecutter.project_slug }}_local_network:
+    name: {{ cookiecutter.project_slug }}_local_network
+  nginxproxy_local_network:
     external: true

@@ -22,7 +22,8 @@ services:
       - VIRTUAL_HOST=api.{{ cookiecutter.domain_name }}
       - LETSENCRYPT_HOST=api.{{ cookiecutter.domain_name }}
     networks:
-      - nginxproxy_production
+      - nginxproxy_production_network
+      - {{ cookiecutter.project_slug }}_production_network
     expose:
       - "8000"
     command: /start
@@ -42,13 +43,16 @@ services:
       - VIRTUAL_HOST=postgres.{{ cookiecutter.domain_name }}
       - LETSENCRYPT_HOST=postgres.{{ cookiecutter.domain_name }}
     networks:
-      - nginxproxy_production
+      - nginxproxy_production_network
+      - {{ cookiecutter.project_slug }}_production_network
     expose:
       - "5432"
 
   redis:
     image: redis:5.0
     container_name: {{ cookiecutter.project_slug }}_production_redis
+    networks:
+      - {{ cookiecutter.project_slug }}_production_network
 
   celeryworker:
     <<: *django
@@ -88,5 +92,7 @@ services:
 
 
 networks:
-  nginxproxy_production:
+  {{ cookiecutter.project_slug }}_production_network:
+    name: {{ cookiecutter.project_slug }}_production_network
+  nginxproxy_production_network:
     external: true

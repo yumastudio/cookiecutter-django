@@ -3,6 +3,7 @@
 USE_DOCKER=yes
 IPYTHONDIR=/app/.ipython
 USE_GRAPHIQL_DEBUG=True
+DJANGO_ALLOWED_HOSTS=.{{ cookiecutter.domain_name.split(".")[0] }}.local
 
 # Redis
 # ------------------------------------------------------------------------------
